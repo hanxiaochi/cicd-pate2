@@ -1,193 +1,168 @@
-# CICD自动化部署工具
+# Jpom CICD 系统 v2.0 - 重构版
 
-<div align="center">
-  <img src="public/images/logo.svg" alt="CICD工具Logo" width="200" height="200">
-</div>
+## 🎯 系统概述
 
-## 项目简介
+基于现代化架构重新设计的持续集成部署系统，采用模块化设计，提供完整的项目生命周期管理功能。
 
-CICD自动化部署工具是一个轻量级的应用部署管理系统，专为简化多项目的持续集成和持续部署流程而设计。它提供了直观的Web界面，让用户能够轻松管理项目、执行部署和回滚操作，无需深入了解复杂的CI/CD工具配置。
+## 🏛️ 架构设计
 
-## 功能特性
+系统采用四层架构：
 
-- **多项目管理**：集中管理多个应用项目，支持不同的代码仓库和部署目标
-- **可视化部署流程**：一键部署，实时显示部署进度和日志
-- **版本回滚**：支持快速回滚到历史版本，保障系统稳定性
-- **启动方式选择**：支持多种应用启动方式，包括直接命令执行和脚本启动
-- **Docker支持**：内置Docker和Docker Compose应用的部署和管理功能
-- **模块化配置**：灵活的项目配置，适应不同项目的部署需求
-- **安全认证**：基于角色的访问控制，保障系统安全性
+1. **访问层** - VUE浏览器界面、HTTP REST API、WebSocket实时通信
+2. **服务端** - 工作空间管理、资产管理、系统管理模块
+3. **插件层** - Java项目管理器、脚本管理引擎
+4. **数据层** - 日志记录系统、权限控制系统
 
-## 技术栈
+## ✨ 功能特性
 
-- **后端**：Ruby 3.2 + Sinatra 2.1
-- **前端**：Haml + CSS + JavaScript
-- **数据库**：SQLite3
-- **Web服务器**：Puma
-- **工具库**：Sequel ORM, Net-SSH, Git
-- **容器化**：Docker + Docker Compose
+- 🏢 **工作空间管理** - 多工作空间隔离、成员管理、权限控制
+- 📦 **项目管理** - 多语言支持、自动化构建部署、版本管理
+- 🖥️ **资产管理** - 机器资源管理、SSH连接、Docker容器管理
+- 👥 **用户权限** - RBAC权限模型、细粒度控制、审计日志
+- 📊 **监控日志** - 实时监控、WebSocket推送、性能统计
+- 🔧 **脚本管理** - 多语言脚本、模板库、安全检查
 
-## 安装指南
+## 🛠️ 技术栈
 
-### Docker部署（推荐）
+- **后端**: Ruby 3.0+, Sinatra 3.0, Sequel ORM, SQLite3
+- **前端**: Haml, HTML5/CSS3, JavaScript, WebSocket
+- **工具**: BCrypt, Net-SSH, EventMachine, Puma
 
-使用Docker Compose是部署此工具的最简单方法，适用于所有主流操作系统。
+## 🚀 快速开始
 
-**前提条件**：
-- 已安装Docker和Docker Compose
-- 服务器需要开放4567端口
+### 安装依赖
 
-**部署步骤**：
-
-1. **克隆项目代码**：
 ```bash
-# 克隆仓库到本地
-mkdir -p /opt/cicd && cd /opt/cicd
-git clone <仓库地址> .
+# 克隆项目
+git clone <repository-url> jpom-cicd
+cd jpom-cicd
+
+# 一键安装
+chmod +x start_refactored.sh
+./start_refactored.sh install
 ```
 
-2. **使用Docker Compose启动**：
+### 启动系统
+
 ```bash
-# 在项目根目录执行
-docker-compose up -d
+# 开发模式
+./start_refactored.sh start development
+
+# 生产模式  
+./start_refactored.sh start production
 ```
 
-3. **访问系统**：
-   打开浏览器，访问 `http://服务器IP:4567`
-   默认账号：admin / admin123
+### 访问系统
 
-### 手动安装
+- 地址: http://localhost:4567
+- 用户名: `admin`
+- 密码: `admin123`
 
-如果您需要在没有Docker的环境中安装，可以参考以下步骤：
+## ⚙️ 配置说明
 
-**前提条件**：
-- Ruby 3.2或更高版本
-- SQLite3数据库
-- Git
-- 网络连接（用于下载依赖）
-
-**安装步骤**：
-
-1. **克隆项目代码**：
-```bash
-# 克隆仓库到本地
-mkdir -p /opt/cicd && cd /opt/cicd
-git clone <仓库地址> .
-```
-
-2. **安装依赖**：
-```bash
-# 安装bundler
-gem install bundler
-
-# 安装项目依赖
-bundle install
-```
-
-3. **启动应用**：
-```bash
-# 使用Puma启动（生产环境推荐）
-bundle exec puma -p 4567 app.rb
-
-# 或直接使用Ruby启动
-ruby app.rb
-```
-
-4. **访问系统**：
-   打开浏览器，访问 `http://服务器IP:4567`
-   默认账号：admin / admin123
-
-## 配置文件说明
-
-项目的配置文件为根目录下的`config.json`，您可以根据需要修改以下配置：
+编辑 `config.json`:
 
 ```json
 {
-  "port": 4567,                // 服务端口
-  "host": "0.0.0.0",          // 监听地址
-  "database": "app.db",       // 数据库文件
-  "session_secret": "random_secret_key"  // 会话密钥
+  "app_port": 4567,
+  "websocket_port": 8080,
+  "log_level": "info",
+  "temp_dir": "./tmp",
+  "docker_support": true
 }
 ```
 
-## 使用指南
+## 📚 使用指南
 
-### 创建项目
+### 1. 工作空间管理
+- 创建工作空间进行项目分组
+- 管理成员权限
+- 配置资源访问
 
-1. 登录系统后，点击"创建新项目"按钮
-2. 填写项目基本信息：
-   - **项目名称**：唯一标识项目的名称
-   - **Git仓库地址**：项目代码仓库的URL
-   - **分支**：要部署的代码分支（默认为master/main）
-   - **服务器地址**：目标服务器的IP或域名
-   - **端口**：SSH端口（默认为22）
-   - **用户名**：SSH用户名
-   - **部署目录**：目标服务器上的部署路径
-   - **启动方式**：选择直接命令或脚本启动
-   - **启动命令/脚本**：根据启动方式填写相应的内容
-   - **启动模式**：普通模式或nohup后台运行模式
-   - **Docker配置**：如使用Docker，可配置Docker相关参数
-3. 点击"保存"按钮完成项目创建
+### 2. 项目管理  
+- 支持Java、Node.js、Python等
+- 配置Git/SVN仓库
+- 自动化构建和部署
 
-### 部署项目
+### 3. 资产管理
+- 添加服务器资源
+- 配置SSH连接
+- 管理Docker容器
 
-1. 在项目列表中，找到要部署的项目
-2. 点击"部署"按钮
-3. 确认部署信息，点击"确认部署"
-4. 系统将显示部署进度和实时日志
-5. 部署完成后，可查看详细日志或进行其他操作
+### 4. 系统管理
+- 用户和权限管理
+- 系统配置
+- 监控和日志
 
-### 回滚项目
+## 🔌 API示例
 
-1. 在项目列表中，找到需要回滚的项目
-2. 点击"回滚"按钮
-3. 选择要回滚到的历史版本
-4. 点击"确认回滚"
-5. 系统将自动执行回滚操作，并显示回滚进度
+```bash
+# 登录
+curl -X POST http://localhost:4567/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
 
-### 查看部署历史
+# 获取项目列表
+curl http://localhost:4567/api/projects
 
-1. 在项目列表中，找到要查看的项目
-2. 点击"历史"按钮
-3. 查看所有历史部署记录，包括时间、分支、提交ID等信息
-4. 点击单条记录可查看详细日志
+# WebSocket连接
+ws://localhost:8080?user_id=1&room=general
+```
 
-## Docker操作指南
+## 👨‍💻 开发指南
 
-### 启动Docker服务
+### 目录结构
+```
+├── app_refactored.rb      # 主应用
+├── config/               # 配置文件
+├── lib/                  # 核心库
+│   ├── controllers/      # 控制器
+│   ├── models/          # 数据模型
+│   ├── services/        # 业务服务
+│   ├── plugins/         # 插件
+│   └── middleware/      # 中间件
+├── views/               # 视图模板
+└── public/              # 静态资源
+```
 
-系统提供了便捷的Docker服务管理功能：
-1. 在项目页面，点击"Docker管理"按钮
-2. 选择"启动Docker服务"
-3. 系统将通过SSH连接到目标服务器并启动Docker服务
+### 添加新功能
+1. 创建模型 (`lib/models/`)
+2. 创建控制器 (`lib/controllers/`)
+3. 添加路由 (`app_refactored.rb`)
+4. 创建视图 (`views/`)
 
-### Docker Compose应用管理
+## 🔧 故障排除
 
-对于使用Docker Compose的项目：
-1. 在创建项目时，勾选"使用Docker Compose"
-2. 填写Compose文件路径（默认为docker-compose.yml）
-3. 部署时，系统将自动使用docker-compose up -d命令启动应用
+### 常见问题
 
-## 注意事项
+1. **启动失败**
+   ```bash
+   # 检查端口占用
+   netstat -tuln | grep 4567
+   # 查看日志
+   tail -f logs/puma.log
+   ```
 
-1. **首次登录**：请在首次登录后立即修改管理员密码
-2. **SSH密钥**：建议使用SSH密钥进行服务器认证，提高安全性
-3. **权限设置**：确保部署用户在目标服务器上有足够的权限
-4. **备份机制**：系统会在每次部署前自动备份当前版本，但建议您也建立额外的备份策略
-5. **安全防护**：在生产环境中，请配置防火墙规则，限制访问IP范围
+2. **SSH连接失败**
+   ```bash
+   # 测试连接
+   ssh -p 22 user@host
+   # 检查密钥权限
+   chmod 600 ssh_keys/*.key
+   ```
 
-## 开发说明
+3. **权限问题**
+   ```bash
+   chmod 700 tmp ssh_keys
+   chmod 755 logs backups
+   ```
 
-### 代码结构
-- `app.rb`：主应用入口文件，包含所有路由和业务逻辑
-- `views/`：包含所有Haml模板文件
-- `public/`：静态资源文件（CSS、JavaScript、图片等）
-- `public/images/`：Web界面使用的图标和图片
+## 📞 支持与贡献
 
-### 数据库模型
-- 项目信息、部署历史和备份记录存储在SQLite数据库中
-- 系统自动创建和维护数据库表结构
+- 问题反馈: 提交Issue
+- 功能建议: 创建Feature Request  
+- 贡献代码: 提交Pull Request
 
-## License
+## 📄 许可证
 
-本项目采用MIT许可证。详情请参阅LICENSE文件。
+MIT License - 详见 LICENSE 文件
