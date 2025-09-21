@@ -1,0 +1,46 @@
+!!!
+%html
+  %head
+    %title 备份管理 - CICD工具
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 CICD自动化部署工具 - 备份管理
+      %a(href="/") 返回首页
+      %a(href="/projects/#{@project.id}") 返回项目
+    %main
+      .backups
+        %h2 项目备份：#{@project.name}
+        
+        - if flash[:error]
+          .flash.error= flash[:error]
+        - if flash[:info]
+          .flash.info= flash[:info]
+        
+        - if @backups && @backups.any?
+          %table.backup-list
+            %thead
+              %tr
+                %th 备份文件名
+                %th 创建时间
+                %th 操作
+            %tbody
+              - @backups.each do |backup|
+                %tr
+                  %td= backup[:file_name]
+                  %td= backup[:timestamp].strftime('%Y-%m-%d %H:%M:%S')
+                  %td
+                    %a.button.small.danger(href="/projects/#{@project.id}/rollback/#{backup[:file_name]}" onclick="return confirm('确定要回滚到这个备份吗？当前版本将被备份。');") 回滚到此版本
+          
+          %div.backup-info
+            %p 备份存储位置：#{@project.backup_path}/#{@project.name}
+        
+        - else
+          %div.no-backups
+            %p 暂无备份文件或备份路径未设置。
+            - if @project.backup_path && !@project.backup_path.empty?
+              %p 请先执行一次部署操作以创建备份。
+            - else
+              %p 请先<a href="/projects/#{@project.id}/edit">编辑项目</a>并设置备份路径。
+    %footer
+      %p CICD工具 &copy; #{Time.now.year}

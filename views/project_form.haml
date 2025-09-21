@@ -1,0 +1,87 @@
+!!!
+%html
+  %head
+    %title #{@project.new? ? '新建项目' : '编辑项目'} - CICD工具
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 CICD自动化部署工具 - #{@project.new? ? '新建项目' : '编辑项目'}
+    %div.container
+      %aside.sidebar
+        %ul
+          %li
+            %a(href="/") 首页
+          %li
+            %a(href="/projects") 项目管理
+          %li
+            %a(href="/resources") 资源管理
+          %li
+            %a(href="/services") 服务管理
+          - if current_user&.role == 'admin'
+            %li
+              %a(href="/admin") 管理员页面
+      %main.content
+        .project-form
+          - if flash[:error]
+            .flash.error= flash[:error]
+          %form(action="#{@project.new? ? '/projects' : "/projects/#{@project.id}"}" method="post")
+            %div.form-group
+              %label 项目名称 *
+              %input(type="text" name="name" value="#{@project.name}" required)
+            %div.form-group
+              %label 代码仓库类型 *
+              %select(name="repo_type" required)
+                %option{ value: "git", selected: (@project.repo_type == 'git') } Git
+                %option{ value: "svn", selected: (@project.repo_type == 'svn') } SVN
+            %div.form-group
+              %label 代码仓库地址 *
+              %input(type="text" name="repo_url" value="#{@project.repo_url}" required placeholder="https://github.com/user/repo.git 或 svn://example.com/repo")
+            %div.form-group
+              %label 分支/标签
+              %input(type="text" name="branch" value="#{@project.branch || 'master'}" placeholder="默认为master")
+            %div.form-group
+              %label 构建脚本
+              %textarea(name="build_script" rows="4" placeholder="npm install && npm run build")= @project.build_script
+            %div.form-group
+              %label 构建产物路径
+              %input(type="text" name="artifact_path" value="#{@project.artifact_path}" placeholder="如：dist/app.tar.gz 或 build/output.jar")
+            %div.form-group
+              %label 部署服务器 *
+              %input(type="text" name="deploy_server" value="#{@project.deploy_server}" required placeholder="格式：user@host:port，默认为root用户和22端口")
+            %div.form-group
+              %label 部署目录 *
+              %input(type="text" name="deploy_path" value="#{@project.deploy_path}" required placeholder="如：/var/www/myapp")
+            %div.form-group
+              %button(type="submit") #{@project.new? ? '创建' : '更新'}项目
+              %a.button.secondary(href="/") 取消
+    %footer
+      %p CICD工具 &copy; #{Time.now.year}
+    
+    :javascript
+      document.addEventListener('DOMContentLoaded', function() {
+        const startTypeSelect = document.getElementById('start_type');
+        const scriptPathGroup = document.querySelector('input[name="start_script_path"]').closest('.form-group');
+        const customCommandGroup = document.querySelector('textarea[name="custom_start_command"]').closest('.form-group');
+        const startModeGroup = document.querySelector('select[name="start_mode"]').closest('.form-group');
+        
+        // 根据选择的启动方式显示/隐藏相关输入框
+        function toggleStartOptions() {
+          const selectedType = startTypeSelect.value;
+          
+          if (selectedType === 'script_path') {
+            scriptPathGroup.style.display = 'block';
+            customCommandGroup.style.display = 'none';
+            startModeGroup.style.display = 'block';
+          } else if (selectedType === 'custom_command') {
+            scriptPathGroup.style.display = 'none';
+            customCommandGroup.style.display = 'block';
+            startModeGroup.style.display = 'none';
+          }
+        }
+        
+        // 初始化显示状态
+        toggleStartOptions();
+        
+        // 添加事件监听器
+        startTypeSelect.addEventListener('change', toggleStartOptions);
+      });

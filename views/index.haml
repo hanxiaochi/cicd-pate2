@@ -1,0 +1,58 @@
+!!!
+%html
+  %head
+    %title CICD工具首页
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 欢迎使用 CICD 工具
+    %nav
+      %ul
+        %li
+          %a(href="/projects") 项目管理
+        %li
+          %a(href="/resources") 资源管理
+        %li
+          %a(href="/services") 服务管理
+        - if current_user&.role == 'admin'
+          %li
+            %a(href="/admin") 管理员页面
+    %main
+      - if flash[:success]
+        .flash.success= flash[:success]
+      - if flash[:error]
+        .flash.error= flash[:error]
+      - if flash[:info]
+        .flash.info= flash[:info]
+      
+      %div.actions
+        %a.button(href="/projects/new") 新建项目
+      
+      - if @projects && @projects.any?
+        %table.projects
+          %thead
+            %tr
+              %th ID
+              %th 项目名称
+              %th 代码仓库类型
+              %th 代码仓库地址
+              %th 分支
+              %th 操作
+          %tbody
+            - @projects.each do |project|
+              %tr
+                %td= project.id
+                %td= project.name
+                %td= project.repo_type
+                %td= project.repo_url
+                %td= project.branch
+                %td
+                  %a.button.small(href="/projects/#{project.id}/edit") 编辑
+                  %a.button.small.primary(href="/projects/#{project.id}/deploy") 部署
+                  %a.button.small.secondary(href="/projects/#{project.id}/backups") 备份管理
+                  %a.button.small.secondary(href="/projects/#{project.id}/history") 部署历史
+                  %a.button.small.danger(href="/projects/#{project.id}/delete" onclick="return confirm('确定要删除这个项目吗？');") 删除
+      - else
+        %p 暂无项目，请点击 "新建项目" 添加。
+    %footer
+      %p &copy; #{Time.now.year} CICD工具

@@ -1,0 +1,49 @@
+!!!
+%html
+  %head
+    %title 部署历史 - CICD工具
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 CICD自动化部署工具 - 部署历史
+      %a(href="/") 返回首页
+      %a(href="/projects/#{@project.id}") 返回项目
+    %main
+      .history
+        %h2 项目部署历史：#{@project.name}
+        
+        %table.history-list
+          %thead
+            %tr
+              %th ID
+              %th 版本号
+              %th 状态
+              %th 部署用户
+              %th 部署时间
+              %th 操作
+          %tbody
+            - @deployments.each do |deployment|
+              %tr{class: deployment.status}
+                %td= deployment.id
+                %td= deployment.version
+                %td
+                  %span.status-badge{class: deployment.status}
+                    - case deployment.status
+                    - when 'success'
+                      成功
+                    - when 'failed'
+                      失败
+                    - when 'pending'
+                      进行中
+                    - else
+                      #{deployment.status}
+                %td= deployment.deploy_user
+                %td= deployment.deployed_at ? deployment.deployed_at.strftime('%Y-%m-%d %H:%M:%S') : '未完成'
+                %td
+                  %a.button.small(href="/projects/#{@project.id}/history/#{deployment.id}") 查看详情
+        
+        - if @deployments.empty?
+          %div.no-history
+            %p 暂无部署记录。
+    %footer
+      %p CICD工具 &copy; #{Time.now.year}

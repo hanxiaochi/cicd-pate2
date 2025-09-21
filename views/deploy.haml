@@ -1,0 +1,62 @@
+!!!
+%html
+  %head
+    %title 部署项目 - CICD工具
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 CICD自动化部署工具 - 部署项目
+      %a(href="/") 返回首页
+      %a(href="/projects/#{@project.id}") 返回项目
+    %main
+      .deploy-form
+        %h2 部署项目：#{@project.name}
+        
+        %div.project-info
+          %h3 项目信息
+          %table.info
+            %tr
+              %td 代码仓库类型：
+              %td= @project.repo_type
+            %tr
+              %td 代码仓库地址：
+              %td= @project.repo_url
+            %tr
+              %td 分支：
+              %td= @project.branch
+            %tr
+              %td 构建脚本：
+              %td.code= @project.build_script || '无'
+            %tr
+              %td 构建产物路径：
+              %td= @project.artifact_path || '无'
+            %tr
+              %td 部署服务器：
+              %td= @project.deploy_server
+            %tr
+              %td 部署目录：
+              %td= @project.deploy_path
+            %tr
+              %td 启动脚本：
+              %td.code= @project.start_script || '无'
+            %tr
+              %td 备份目录：
+              %td= @project.backup_path || '无'
+        
+        %div.deploy-warning
+          %p 警告：部署操作将立即执行，可能会影响正在运行的服务。请确认您已了解操作风险。
+        
+        %form(action="/projects/#{@project.id}/deploy" method="post")
+          %div.form-group
+            %button(type="submit" class="danger") 确认部署
+            %a.button.secondary(href="/") 取消
+        
+        %div.docker-actions
+          %h3 Docker操作
+          %p 注意：以下操作仅在配置了Docker Compose文件时有效
+          %div.form-group
+            %a.button.docker(href="/projects/#{@project.id}/docker/start") 启动Docker服务
+            %a.button.docker(href="/projects/#{@project.id}/docker/stop") 停止Docker服务
+            %a.button.docker(href="/projects/#{@project.id}/docker/restart") 重启Docker服务
+    %footer
+      %p CICD工具 &copy; #{Time.now.year}

@@ -1,0 +1,7 @@
+{
+  "ssh_default_port": 22,
+  "app_port": 4567,
+  "log_level": "info",
+  "temp_dir": "./tmp",
+  "docker_support": true
+}

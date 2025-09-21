@@ -1,0 +1,56 @@
+!!!
+%html
+  %head
+    %title 部署详情 - CICD工具
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 CICD自动化部署工具 - 部署详情
+      %a(href="/") 返回首页
+      %a(href="/projects/#{@project.id}") 返回项目
+      %a(href="/projects/#{@project.id}/history") 返回历史记录
+    %main
+      .deployment-detail
+        %h2 部署详情
+        
+        %div.deployment-info
+          %h3 基本信息
+          %table.info
+            %tr
+              %td 部署ID：
+              %td= @deployment.id
+            %tr
+              %td 项目名称：
+              %td= @project.name
+            %tr
+              %td 版本号：
+              %td= @deployment.version
+            %tr
+              %td 状态：
+              %td
+                %span.status-badge{class: @deployment.status}
+                  - case @deployment.status
+                  - when 'success'
+                    成功
+                  - when 'failed'
+                    失败
+                  - when 'pending'
+                    进行中
+                  - else
+                    #{@deployment.status}
+            %tr
+              %td 部署用户：
+              %td= @deployment.deploy_user
+            %tr
+              %td 部署时间：
+              %td= @deployment.deployed_at ? @deployment.deployed_at.strftime('%Y-%m-%d %H:%M:%S') : '未完成'
+            - if @deployment.backup_file
+              %tr
+                %td 备份文件：
+                %td= @deployment.backup_file
+        
+        %div.deployment-log
+          %h3 部署日志
+          %pre.log-content= @deployment.log || '暂无日志信息'
+    %footer
+      %p CICD工具 &copy; #{Time.now.year}

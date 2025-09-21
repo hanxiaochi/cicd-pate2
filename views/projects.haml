@@ -1,0 +1,18 @@
+%h2 项目管理
+%a.button(href="/projects/new") 新建项目
+%table
+  %thead
+    %tr
+      %th ID
+      %th 名称
+      %th 仓库类型
+      %th 操作
+  %tbody
+    - @projects.each do |project|
+      %tr
+        %td= project.id
+        %td= project.name
+        %td= project.repo_type
+        %td
+          %a.button.small(href="/projects/#{project.id}/edit") 编辑
+          %a.button.small.danger(href="/projects/#{project.id}/delete") 删除

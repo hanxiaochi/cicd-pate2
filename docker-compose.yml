@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "4567:4567"
+    volumes:
+      - ./public:/app/public # 挂载静态文件目录
+      - ./views:/app/views   # 挂载视图文件目录
+    environment:
+      - RACK_ENV=production
+      - SINATRA_ENV=production
+    restart: unless-stopped
+
+volumes:
+  db_data:

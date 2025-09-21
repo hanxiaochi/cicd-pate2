@@ -1,0 +1,16 @@
+%h2 服务管理
+%table
+  %thead
+    %tr
+      %th 名称
+      %th 描述
+      %th 操作
+  %tbody
+    - @services.each do |service|
+      %tr
+        %td= service.name
+        %td= service.description
+        %td
+          %form(action="/services/restart" method="post")
+            %input(type="hidden" name="id" value="#{service.id}")
+            %button 重启

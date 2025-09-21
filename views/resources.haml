@@ -1,0 +1,15 @@
+%h2 资源管理
+%form(action="/resources" method="post")
+  %input(type="text" name="name" placeholder="资源名称")
+  %input(type="text" name="ip" placeholder="IP地址")
+  %button 添加资源
+%table
+  %thead
+    %tr
+      %th 名称
+      %th IP地址
+  %tbody
+    - @resources.each do |resource|
+      %tr
+        %td= resource.name
+        %td= resource.ip

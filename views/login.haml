@@ -1,0 +1,24 @@
+!!!
+%html
+  %head
+    %title 登录 - CICD工具
+    %link(rel="stylesheet" href="/style.css")
+  %body
+    %header
+      %h1 CICD自动化部署工具 - 登录
+    %main
+      .login-form
+        %h2 用户登录
+        - if flash[:error]
+          .flash.error= flash[:error]
+        %form(action="/login" method="post")
+          %div.form-group
+            %label 用户名
+            %input(type="text" name="username" required)
+          %div.form-group
+            %label 密码
+            %input(type="password" name="password" required)
+          %div.form-group
+            %button(type="submit") 登录
+    %footer
+      %p CICD工具 &copy; #{Time.now.year}
